@@ -67,8 +67,8 @@ Aether bridges the timeline of computer science, blending cutting-edge declarati
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/aether-quantum-engine.git
-   cd aether-quantum-engine
+   git clone https://github.com/tadanobutubutu/aether.git
+   cd aether
    ```
 
 2. Sync with Gradle and build the apk:
