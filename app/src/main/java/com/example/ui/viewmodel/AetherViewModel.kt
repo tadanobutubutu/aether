@@ -96,7 +96,10 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
                 orbitSpeed = db.orbitSpeed,
                 description = db.description,
                 // keep current position angle if it already exists to avoid jumps
-                angle = existing?.angle ?: Random.nextFloat() * 6.28f
+                angle = existing?.angle ?: (Random.nextFloat() * 6.28f),
+                x = existing?.x ?: 0f,
+                y = existing?.y ?: 0f,
+                isDragged = existing?.isDragged ?: false
             )
         }
     }
@@ -112,9 +115,14 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
                 planetId = db.categoryId,
                 importance = db.importance,
                 status = db.status,
-                angle = existing?.angle ?: Random.nextFloat() * 6.28f,
+                angle = existing?.angle ?: (Random.nextFloat() * 6.28f),
                 relativeDistance = existing?.relativeDistance ?: (15f + db.importance * 12f + Random.nextFloat() * 8f),
-                orbitSpeed = existing?.orbitSpeed ?: (0.015f + (1.5f - db.importance) * 0.015f) * (if (Random.nextBoolean()) 1 else -1)
+                orbitSpeed = existing?.orbitSpeed ?: ((0.015f + (1.5f - db.importance) * 0.015f) * (if (Random.nextBoolean()) 1 else -1)),
+                x = existing?.x ?: 0f,
+                y = existing?.y ?: 0f,
+                isDragged = existing?.isDragged ?: false,
+                trail = existing?.trail ?: emptyList(),
+                birthAnimationProgress = existing?.birthAnimationProgress ?: 1.0f
             )
         }
     }
