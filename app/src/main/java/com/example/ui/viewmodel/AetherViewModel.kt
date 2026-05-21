@@ -15,8 +15,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.ArrayList
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
@@ -46,6 +48,24 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
     // Detailed view state
     private val _selectedThought = MutableStateFlow<ThoughtEntity?>(null)
     val selectedThought: StateFlow<ThoughtEntity?> = _selectedThought.asStateFlow()
+
+    val selectedThoughtUiState: StateFlow<SelectedThoughtUiState?> = combine(
+        _selectedThought,
+        _planets
+    ) { thought, currentPlanets ->
+        if (thought == null) null else {
+            val planet = currentPlanets.find { it.id == thought.categoryId }
+            SelectedThoughtUiState(
+                thought = thought,
+                planetName = planet?.name ?: "Unknown",
+                planetColorHex = planet?.colorHex ?: "#FFFFFF"
+            )
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
 
     private var nextSatelliteId = 1L // For birth animations
 
@@ -121,86 +141,38 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
                 x = existing?.x ?: 0f,
                 y = existing?.y ?: 0f,
                 isDragged = existing?.isDragged ?: false,
-                trail = existing?.trail ?: emptyList(),
+                trailX = existing?.trailX ?: FloatArray(10),
+                trailY = existing?.trailY ?: FloatArray(10),
+                trailCount = existing?.trailCount ?: 0,
+                trailHead = existing?.trailHead ?: 0,
                 birthAnimationProgress = existing?.birthAnimationProgress ?: 1.0f
             )
         }
     }
 
+    private var lastUpdateTime = 0L
+
     fun updatePhysics(width: Float, height: Float) {
-        val centerX = width / 2f
-        val centerY = height / 2f
-
-        // 1. Update Planets
-        val updatedPlanets = _planets.value.map { planet ->
-            if (!planet.isDragged) {
-                // Update orbit angle
-                val speedCoef = 0.005f * planet.orbitSpeed
-                val newAngle = (planet.angle + speedCoef) % 6.28f
-                // Compute standard pixel screen coordinates
-                val rad = planet.orbitRadius * 2.5f // Scale factor for screen DPI
-                val x = centerX + rad * cos(newAngle)
-                val y = centerY + rad * sin(newAngle)
-                planet.copy(angle = newAngle, x = x, y = y)
-            } else {
-                planet
-            }
+        val now = System.currentTimeMillis()
+        if (lastUpdateTime == 0L) {
+            lastUpdateTime = now
+            return
         }
-        _planets.value = updatedPlanets
+        val elapsed = now - lastUpdateTime
+        lastUpdateTime = now
 
-        // Create a fast map for quick planet lookup
-        val planetMap = updatedPlanets.associateBy { it.id }
+        // Target: 16.67ms per frame (60fps). Safe limits to prevent teleportation on background resume.
+        val dt = (elapsed / 16.67f).coerceIn(0.1f, 4.0f)
 
-        // 2. Update Satellites orbiting their planet hosts
-        val updatedSatellites = _satellites.value.map { sat ->
-            if (!sat.isDragged && sat.birthAnimationProgress >= 1f) {
-                val host = planetMap[sat.planetId]
-                if (host != null) {
-                    val newAngle = (sat.angle + sat.orbitSpeed) % 6.28f
-                    // satellite orbits the host planet coordinates
-                    val distanceFactor = sat.relativeDistance * 1.5f
-                    val satX = host.x + distanceFactor * cos(newAngle)
-                    val satY = host.y + distanceFactor * sin(newAngle)
+        val currentPlanets = _planets.value
+        val currentSatellites = _satellites.value
 
-                    // Keep a trailing particle history (trail length = 8 elements)
-                    val trailList = (sat.trail + Offset(satX, satY)).takeLast(10)
+        // GC optimization: Perform physical updates in-place via engine (Zero Objects Allocation!)
+        AetherPhysicsEngine.update(currentPlanets, currentSatellites, width, height, dt)
 
-                    sat.copy(angle = newAngle, x = satX, y = satY, trail = trailList)
-                } else {
-                    sat
-                }
-            } else if (sat.birthAnimationProgress < 1f) {
-                // Newly born satellite flying from central sun to its destination
-                val host = planetMap[sat.planetId]
-                if (host != null) {
-                    val progress = sat.birthAnimationProgress + 0.03f
-                    // Destination is host planet position plus initial orbit position
-                    val destAngle = sat.angle
-                    val distanceFactor = sat.relativeDistance * 1.5f
-                    val destX = host.x + distanceFactor * cos(destAngle)
-                    val destY = host.y + distanceFactor * sin(destAngle)
-
-                    // Linear interpolation from central sun (centerX, centerY) to dest
-                    val currentX = centerX + (destX - centerX) * progress
-                    val currentY = centerY + (destY - centerY) * progress
-
-                    val trailList = (sat.trail + Offset(currentX, currentY)).takeLast(10)
-
-                    sat.copy(
-                        birthAnimationProgress = progress,
-                        x = currentX,
-                        y = currentY,
-                        trail = trailList
-                    )
-                } else {
-                    sat
-                }
-            } else {
-                // Being dragged directly by user
-                sat
-            }
-        }
-        _satellites.value = updatedSatellites
+        // Emitting shallow copy lists to satisfy StateFlow and trigger recomposition / canvas invalidation with zero GC overhead
+        _planets.value = ArrayList(currentPlanets)
+        _satellites.value = ArrayList(currentSatellites)
     }
 
     fun onPlanetDragged(id: Int, newX: Float, newY: Float, width: Float, height: Float) {
@@ -453,6 +425,12 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
 
 // --- Visual Canvas States ---
 
+data class SelectedThoughtUiState(
+    val thought: ThoughtEntity,
+    val planetName: String,
+    val planetColorHex: String
+)
+
 data class PlanetState(
     val id: Int,
     val name: String,
@@ -482,7 +460,29 @@ data class SatelliteState(
     val orbitSpeed: Float,
     var x: Float = 0f,
     var y: Float = 0f,
-    var trail: List<Offset> = emptyList(),
+    val trailX: FloatArray = FloatArray(10),
+    val trailY: FloatArray = FloatArray(10),
+    var trailCount: Int = 0,
+    var trailHead: Int = 0,
     var isDragged: Boolean = false,
     var birthAnimationProgress: Float = 1.0f // 1.0 means fully loaded in native orbit
-)
+) {
+    fun addTrailPoint(px: Float, py: Float) {
+        trailX[trailHead] = px
+        trailY[trailHead] = py
+        trailHead = (trailHead + 1) % 10
+        if (trailCount < 10) {
+            trailCount++
+        }
+    }
+
+    fun getTrailPoints(): List<Offset> {
+        val points = ArrayList<Offset>(trailCount)
+        val startIdx = if (trailCount < 10) 0 else trailHead
+        for (i in 0 until trailCount) {
+            val idx = (startIdx + i) % 10
+            points.add(Offset(trailX[idx], trailY[idx]))
+        }
+        return points
+    }
+}

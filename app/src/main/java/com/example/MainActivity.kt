@@ -43,6 +43,7 @@ import com.example.ui.theme.*
 import com.example.ui.viewmodel.AetherViewModel
 import com.example.ui.viewmodel.PlanetState
 import com.example.ui.viewmodel.SatelliteState
+import com.example.ui.viewmodel.SelectedThoughtUiState
 
 class MainActivity : ComponentActivity() {
     private val viewModel: AetherViewModel by viewModels()
@@ -79,7 +80,7 @@ fun AetherAppScreen(
     val errorMessage by viewModel.errorMessage.collectAsState()
     val statusText by viewModel.statusText.collectAsState()
     
-    val selectedThought by viewModel.selectedThought.collectAsState()
+    val selectedThoughtState by viewModel.selectedThoughtUiState.collectAsState()
     val planets by viewModel.planets.collectAsState()
     val thoughts by viewModel.thoughts.collectAsState()
 
@@ -407,18 +408,17 @@ fun AetherAppScreen(
                 }
             }
         }
-
-        // 5. Glassmorphic Slider Drawer (Details Card - slide in from lower bottom)
+         // 5. Glassmorphic Slider Drawer (Details Card - slide in from lower bottom)
         androidx.compose.animation.AnimatedVisibility(
-            visible = selectedThought != null,
+            visible = selectedThoughtState != null,
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
             exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
-            selectedThought?.let { thought ->
-                val planet = planets.find { p -> p.id == thought.categoryId }
-                val planetColor = planet?.let { Color.parse(it.colorHex) } ?: CosmicPrimary
-
+            selectedThoughtState?.let { uiState ->
+                val thought = uiState.thought
+                val planetColor = Color.parse(uiState.planetColorHex)
+ 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -443,7 +443,7 @@ fun AetherAppScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = (planet?.name ?: "Musa").uppercase(),
+                                text = uiState.planetName.uppercase(),
                                 color = planetColor,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
@@ -524,7 +524,7 @@ fun AetherAppScreen(
 
         // 6. Sticky bottom-pinned Stream-of-consciousness quick input block
         androidx.compose.animation.AnimatedVisibility(
-            visible = selectedThought == null,
+            visible = selectedThoughtState == null,
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
             exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
             modifier = Modifier

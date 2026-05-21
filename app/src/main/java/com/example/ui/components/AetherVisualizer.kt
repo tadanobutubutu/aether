@@ -82,7 +82,7 @@ fun AetherVisualizer(
             if (canvasWidth > 1f && canvasHeight > 1f) {
                 viewModel.updatePhysics(canvasWidth, canvasHeight)
             }
-            delay(16) // ~60fps atomic updates
+            delay(32) // ~30fps stable updates (Delta time maintains natural speed)
         }
     }
 
@@ -330,14 +330,15 @@ fun AetherVisualizer(
                 val baseRadius = 8f * sat.importance
 
                 // A. Render particle trail (highly visual, satisfying fluid displacement)
-                if (sat.trail.size > 1) {
-                    for (i in 0 until sat.trail.size - 1) {
-                        val progress = i.toFloat() / sat.trail.size
+                val trailPoints = sat.getTrailPoints()
+                if (trailPoints.size > 1) {
+                    for (i in 0 until trailPoints.size - 1) {
+                        val progress = i.toFloat() / trailPoints.size
                         val trailRadius = baseRadius * 0.75f * progress
                         drawCircle(
                             color = satColor,
                             radius = trailRadius,
-                            center = sat.trail[i],
+                            center = trailPoints[i],
                             alpha = progress * 0.35f
                         )
                     }
