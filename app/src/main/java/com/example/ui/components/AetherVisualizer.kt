@@ -44,6 +44,7 @@ fun AetherVisualizer(
     // Active drag tracking
     var draggedPlanetId by remember { mutableStateOf<Int?>(null) }
     var draggedSatelliteId by remember { mutableStateOf<Long?>(null) }
+    var isActuallyDragged by remember { mutableStateOf(false) }
 
     // Centered Infinite breathing transitions for the central Aether Core sun
     val infiniteTransition = rememberInfiniteTransition(label = "core_pulse")
@@ -85,16 +86,21 @@ fun AetherVisualizer(
         }
     }
 
+    // Stable pointer references preventing 60Hz gesture detector tear and recreation
+    val currentPlanets by rememberUpdatedState(planets)
+    val currentSatellites by rememberUpdatedState(satellites)
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .pointerInput(canvasWidth, canvasHeight, planets, satellites) {
+            .pointerInput(canvasWidth, canvasHeight) {
                 detectDragGestures(
                     onDragStart = { offset ->
+                        isActuallyDragged = false
                         // Check if touching any satellite node first (high priority target)
                         var matchedSat: SatelliteState? = null
                         var minSatDist = touchThreshold
-                        satellites.forEach { s ->
+                        currentSatellites.forEach { s ->
                             val dx = offset.x - s.x
                             val dy = offset.y - s.y
                             val dist = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
@@ -106,12 +112,11 @@ fun AetherVisualizer(
 
                         if (matchedSat != null) {
                             draggedSatelliteId = matchedSat!!.id
-                            viewModel.onSatelliteDragged(matchedSat!!.id, offset.x, offset.y)
                         } else {
                             // Check if touching any Planet node
                             var matchedPlanet: PlanetState? = null
                             var minPlanetDist = touchThreshold * 1.5f
-                            planets.forEach { p ->
+                            currentPlanets.forEach { p ->
                                 val dx = offset.x - p.x
                                 val dy = offset.y - p.y
                                 val dist = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
@@ -128,6 +133,7 @@ fun AetherVisualizer(
                     },
                     onDrag = { change, dragAmount ->
                         change.consume()
+                        isActuallyDragged = true
                         val currentDragPos = change.position
                         draggedSatelliteId?.let { satId ->
                             viewModel.onSatelliteDragged(satId, currentDragPos.x, currentDragPos.y)
@@ -137,11 +143,15 @@ fun AetherVisualizer(
                     },
                     onDragEnd = {
                         draggedSatelliteId?.let { satId ->
-                            viewModel.onSatelliteDragEnded(satId, canvasWidth, canvasHeight)
-                            // Tap detection (if dragged minor amount, select thoughts detail)
-                            val sat = satellites.find { it.id == satId }
-                            if (sat != null && !sat.isDragged) {
-                                onThoughtSelected(sat)
+                            if (!isActuallyDragged) {
+                                // TAP: Open thoughts detail
+                                val sat = currentSatellites.find { it.id == satId }
+                                if (sat != null) {
+                                    onThoughtSelected(sat)
+                                }
+                            } else {
+                                // DRAG ENDED: Gravity check / incinerate
+                                viewModel.onSatelliteDragEnded(satId, canvasWidth, canvasHeight)
                             }
                             draggedSatelliteId = null
                         } ?: draggedPlanetId?.let { planetId ->
@@ -156,20 +166,6 @@ fun AetherVisualizer(
                         } ?: draggedPlanetId?.let { planetId ->
                             viewModel.onPlanetDragEnded(planetId)
                             draggedPlanetId = null
-                        }
-                    }
-                )
-            }
-            .pointerInput(canvasWidth, canvasHeight, satellites) {
-                // Taping gesture detector for selecting thoughts
-                detectDragGestures(
-                    onDrag = { _, _ -> },
-                    onDragStart = { offset ->
-                        satellites.forEach { s ->
-                            val dist = Math.sqrt(((offset.x - s.x) * (offset.x - s.x) + (offset.y - s.y) * (offset.y - s.y)).toDouble())
-                            if (dist < touchThreshold) {
-                                onThoughtSelected(s)
-                            }
                         }
                     }
                 )

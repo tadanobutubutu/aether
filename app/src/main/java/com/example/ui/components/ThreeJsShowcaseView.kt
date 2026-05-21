@@ -21,11 +21,9 @@ fun ThreeJsShowcaseView(modifier: Modifier = Modifier) {
                     javaScriptEnabled = true
                     domStorageEnabled = true
                     
-                    // --- SECURITY IMPROVEMENT: WebView Hardening ---
-                    // Explicitly disable absolute file and content access to prevent
-                    // cross-site file leakage (local code execution) while retaining assets loading.
-                    allowFileAccess = false
-                    allowContentAccess = false
+                    // Enable secure local assets loading and script assets extraction
+                    allowFileAccess = true
+                    allowContentAccess = true
                     
                     loadWithOverviewMode = true
                     useWideViewPort = true

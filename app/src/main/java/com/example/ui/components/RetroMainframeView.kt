@@ -164,10 +164,15 @@ fun RetroMainframeView(modifier: Modifier = Modifier) {
                             .border(1.dp, Color(0xFF115511))
                             .padding(8.dp)
                     ) {
-                        LazyColumn(reverseLayout = true) {
-                            items(y2kSuccessLogs.asReversed().size) { idx ->
+                        val innerScroll = rememberScrollState()
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(innerScroll)
+                        ) {
+                            y2kSuccessLogs.forEach { log ->
                                 Text(
-                                    text = "> " + y2kSuccessLogs.asReversed()[idx],
+                                    text = "> $log",
                                     color = Color(0xFF22FF22),
                                     fontSize = 10.sp,
                                     fontFamily = FontFamily.Monospace
@@ -361,11 +366,16 @@ fun RetroMainframeView(modifier: Modifier = Modifier) {
                                 .border(1.dp, Color(0xFF114411))
                                 .padding(6.dp)
                         ) {
-                            LazyColumn(reverseLayout = true) {
-                                items(soapSimulatedLogs.asReversed().size) { idx ->
+                            val innerScroll = rememberScrollState()
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .verticalScroll(innerScroll)
+                            ) {
+                                soapSimulatedLogs.forEach { log ->
                                     Text(
-                                        text = soapSimulatedLogs.asReversed()[idx],
-                                        color = if (soapSimulatedLogs.asReversed()[idx].contains("POST") || soapSimulatedLogs.asReversed()[idx].contains("SOAPAction")) Color(0xFF33FF33) else Color(0xFF00FFBB),
+                                        text = log,
+                                        color = if (log.contains("POST") || log.contains("SOAPAction")) Color(0xFF33FF33) else Color(0xFF00FFBB),
                                         fontSize = 9.sp,
                                         fontFamily = FontFamily.Monospace,
                                         lineHeight = 11.sp
