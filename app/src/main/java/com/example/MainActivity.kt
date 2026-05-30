@@ -715,7 +715,7 @@ fun AetherAppScreen(
             } else if (activeTab == "Compute") {
                 ThreeJsShowcaseView(modifier = Modifier.fillMaxSize())
             } else {
-                RetroMainframeView(modifier = Modifier.fillMaxSize())
+                RetroMainframeView(viewModel = viewModel, modifier = Modifier.fillMaxSize())
             }
         }
 

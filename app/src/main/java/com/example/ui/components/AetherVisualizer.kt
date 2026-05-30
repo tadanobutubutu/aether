@@ -329,16 +329,21 @@ fun AetherVisualizer(
                 val satColor = host?.let { Color.parse(it.colorHex) } ?: CosmicPrimary
                 val baseRadius = 8f * sat.importance
 
-                // A. Render particle trail (highly visual, satisfying fluid displacement)
-                val trailPoints = sat.getTrailPoints()
-                if (trailPoints.size > 1) {
-                    for (i in 0 until trailPoints.size - 1) {
-                        val progress = i.toFloat() / trailPoints.size
+                // A. Render particle trail (highly visual, satisfying fluid displacement with zero GC allocations)
+                val count = sat.trailCount
+                val head = sat.trailHead
+                if (count > 1) {
+                    val startIdx = if (count < 10) 0 else head
+                    for (i in 0 until count) {
+                        val idx = (startIdx + i) % 10
+                        val tX = sat.trailX[idx]
+                        val tY = sat.trailY[idx]
+                        val progress = i.toFloat() / count
                         val trailRadius = baseRadius * 0.75f * progress
                         drawCircle(
                             color = satColor,
                             radius = trailRadius,
-                            center = trailPoints[i],
+                            center = Offset(tX, tY),
                             alpha = progress * 0.35f
                         )
                     }

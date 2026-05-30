@@ -10,6 +10,20 @@
 
 Whether charting AI-categorized thought paths using the standard **Jetpack Compose Physics canvas**, panning around a beautiful **Three.js WebGL Orbit cluster**, or running legacy **Y2K tests over synchronous SOAP v1.1 envelopes**, Aether is engineered to captivate and amuse minds across all generations of computer science.
 
+### 🌐 The Aesthetic Dualism: Modern Galaxy vs. Retro Mainframe Terminal
+```
+       MODERN STELLAR EXPLORER                  RETRO MAINFRAME TERMINAL
+ ┌───────────────────────────────┐        ┌───────────────────────────────┐
+ │ SYSTEM CORE    Bijective v1.0 │        │ AETHER COBOL COGNITIVE DOCK   │
+ │        ● (Zenith Orbit)       │        │ STATUS: BUFF_CLEAR  Y2K_SAFE  │
+ │       /  \                    │ ◄────► │                               │
+ │      ○    ○ (Musa Domain)     │        │ ☄️ SELECTED: [ Zenith Orbit ]  │
+ │     /                         │        │ RADIUS DIAL: [ -15d] [ +15d]  │
+ │    ● (Satellite Synapse)      │        │ HOLLERITH:   ▇  ·  ▇  ▇  ·  · │
+ └───────────────────────────────┘        └───────────────────────────────┘
+  (Jetpack Compose Physics, 60fps)         (Neon CRT Monospace Mainframe)
+```
+
 ---
 
 ## 🎨 Creative Philosophy: Bijective Unified State
@@ -23,14 +37,35 @@ The cornerstone of **Aether** is its strict adherence to **Bijective Design**:
 
 ## 🚀 The Multi-Generation Technology Stack
 
-Aether bridges the timeline of computer science, blending cutting-edge declarative state management with jokes from the physical limits of 1980s mainframe terminals.
+### ⚠️ Technical Transparency & Emulation Architecture
+To make **Aether** 100% self-contained and buildable immediately inside standard Android Studio, **the entire ancient mainframe architecture is simulated directly within native Kotlin / JVM layers.** 
+No separate COBOL compilers, Perl engines, or external SOAP servers are required on your device! The binary matrix logic, XML SOAP envelope formatting, and Hollerith 80-column punchcard computations run locally inside `AetherViewModel` and `RetroMainframeView`.
 
-| Aspect | ⚡ Cutting-Edge Stack (The Aether Core) | 📟 The Ancient Relics (The Mainframe) |
+### 🔄 The Bijective Synchronization Pipeline
+```
+[ Aether Explorer Tab: Jetpack Compose ] 
+          │
+          ▼ Direct user drag/speech action 
+[ AetherViewModel: Native Kotlin Flows ]
+          │
+          │ ── (If modern route: Direct secure HTTPS/REST bypass)
+          │ ── (If legacy route: Intercept and serialize to SOAP v1.1)
+          ▼
+[ simulated-cgi/aether-core.pl (Local Kotlin VM Parser) ]
+          │
+          ├─► Math-transforms coordinates to Hollerith binary card holes
+          ├─► Spits formatted retro ASCII punch cards
+          └─► Recalculate orbital angles automatically ◄───────┐
+                                                               │ User adjusts dials
+                                                    [ RetroMainframe Dial Controls ]
+```
+
+| Aspect | ⚡ Cutting-Edge Stack (The Aether Core) | 📟 The Ancient Relics (The Mainframe Simulator) |
 | :--- | :--- | :--- |
-| **Language** | Kotlin (1.9) & Kotlin/JVM | Pure COBOL-80 & CGI-BIN Perl 5.0 |
-| **UI Paradigm** | Declarative Jetpack Compose (Material 3) | Monospace Green Phosphor CRT Matrix (Scanline Filter) |
+| **Language** | Kotlin (1.9) & Kotlin/JVM | Simulated Pure COBOL-80 & CGI-BIN Perl 5.0 |
+| **UI Paradigm** | Declarative Jetpack Compose (Material 3) | Simulated Green Phosphor CRT Matrix Console |
 | **3D Rendering**| OpenGL ES via Three.js (WebGL 128) | ASCII Art & 80-Column Card Columns (`·` and `▇` punch holes) |
-| **Network** | Asynchronous Coroutines / Flow streams | Synchronous SOAP v1.1 over HTTP Port 80 |
+| **Network** | Asynchronous Coroutines / Flow streams | Simulated Synchronous SOAP v1.1 over HTTP Port 80 |
 | **Modem Channel**| 5G / Fiber-optic WebSockets | US Robotics 14.4k Baud Handshake (`ATDT 555-4321`) |
 | **Data Standard** | JSON Serialization | Verbose XML Envelope Body |
 

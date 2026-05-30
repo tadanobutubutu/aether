@@ -45,6 +45,67 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
     private val _satellites = MutableStateFlow<List<SatelliteState>>(emptyList())
     val satellites: StateFlow<List<SatelliteState>> = _satellites.asStateFlow()
 
+    // --- Bijective Retro Simulation States & Flags ---
+    private val _isLegacyRouteEnabled = MutableStateFlow(true)
+    val isLegacyRouteEnabled: StateFlow<Boolean> = _isLegacyRouteEnabled.asStateFlow()
+
+    private val _cgiBufferOverflow = MutableStateFlow(false)
+    val cgiBufferOverflow: StateFlow<Boolean> = _cgiBufferOverflow.asStateFlow()
+
+    private val _mainframeLogs = MutableStateFlow<List<String>>(
+        listOf(
+            "MAINFRAME COGNITIVE DISK ACCELERATOR ACTIVE",
+            "Y2K CLOCK GUARD STATUS: IMMUNE AND SECURE",
+            "INITIAL COGNITIVE PIPELINE CALIBRATED",
+            "BOUND TO REMOTE HOLLERITH EMULATOR INT-80"
+        )
+    )
+    val mainframeLogs: StateFlow<List<String>> = _mainframeLogs.asStateFlow()
+
+    fun setLegacyRouteEnabled(enabled: Boolean) {
+        _isLegacyRouteEnabled.value = enabled
+        addMainframeLog("ROUTE CONFIG: Routing updated to ${if (enabled) "PERL CGI-BIN SOAP v1.1 OVER PORT 80 SINK" else "DIRECT SECURE HIGH-SPEED KOTLIN JSON HIGHWAY"}")
+    }
+
+    fun clearCgiOverflow() {
+        _cgiBufferOverflow.value = false
+        addMainframeLog("CGI SYSTEM FLUSH: PURGED ACCUMULATED BUFFER FLOATS. CLOCK-DRIFT ALIGNED.")
+        _statusText.value = "CGI-BIN Buffer cleared. Mainframe status nominal."
+    }
+
+    fun addMainframeLog(message: String) {
+        val current = _mainframeLogs.value
+        val formatTime = java.text.SimpleDateFormat("HH:mm:ss.SSS", java.util.Locale.US).format(java.util.Date())
+        _mainframeLogs.value = (current + "[$formatTime] $message").takeLast(60)
+    }
+
+    // Bijective manual modification of orbit settings directly from the mainframe
+    fun updatePlanetOrbitFromMainframe(id: Int, dRadius: Float, dAngle: Float) {
+        _planets.value = _planets.value.map { p ->
+            if (p.id == id) {
+                val newRadius = (p.orbitRadius + dRadius).coerceIn(40f, 320f)
+                val newAngle = (p.angle + dAngle) % 6.2831853f
+                p.copy(orbitRadius = newRadius, angle = newAngle)
+            } else {
+                p
+            }
+        }
+        addMainframeLog("BIJECTIVE DATA: Re-arranged Planet ID $id. New orbit radius = ${_planets.value.find { it.id == id }?.orbitRadius?.toInt()}dp.")
+    }
+
+    fun updateSatelliteOrbitFromMainframe(id: Long, dAngle: Float, dDistance: Float) {
+        _satellites.value = _satellites.value.map { s ->
+            if (s.id == id) {
+                val newDistance = (s.relativeDistance + dDistance).coerceIn(15f, 160f)
+                val newAngle = (s.angle + dAngle) % 6.2831853f
+                s.copy(angle = newAngle, relativeDistance = newDistance)
+            } else {
+                s
+            }
+        }
+        addMainframeLog("BIJECTIVE DATA: Rotated satellite ID $id angle by ${String.format(java.util.Locale.US, "%.2f", dAngle)} rad.")
+    }
+
     // Detailed view state
     private val _selectedThought = MutableStateFlow<ThoughtEntity?>(null)
     val selectedThought: StateFlow<ThoughtEntity?> = _selectedThought.asStateFlow()
@@ -200,6 +261,7 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
     fun onPlanetDragEnded(id: Int) {
         _planets.value = _planets.value.map { p ->
             if (p.id == id) {
+                addMainframeLog("MAINFRAME DISPLACED: Planet ID $id (${p.name}) moved to (${p.x.toInt()}, ${p.y.toInt()}). Bijective orbit radius: ${p.orbitRadius.toInt()}dp.")
                 // Persist the custom orbit radius/speed changes to local Room db!
                 viewModelScope.launch {
                     val dbCat = categories.value.find { it.id == id }
@@ -233,6 +295,7 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
         val isTrashZone = sat.y > (height - 250f) && Math.abs(sat.x - centerX) < 180f
 
         if (isTrashZone) {
+            addMainframeLog("MAINFRAME HOLLERITH VOID: Incinerated Satellite ID $id (${sat.title}) from cognitive pipeline physically.")
             // Incinerate / Delete
             viewModelScope.launch {
                 repository.deleteThoughtById(id.toInt())
@@ -258,6 +321,7 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
 
         val destinationPlanet = nearestPlanet
         if (destinationPlanet != null && destinationPlanet.id != sat.planetId && minDistance < 250f) {
+            addMainframeLog("BIJECTIVE GRAVITY CAPTURE: Satellite ID $id captured. Shifted category domain logic: ${destinationPlanet.name}.")
             // Captured by another planet's gravity! Re-map category immediately in Room!
             viewModelScope.launch {
                 val dbThought = thoughts.value.find { it.id == id.toInt() }
@@ -287,6 +351,7 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
                     } else {
                         s.angle
                     }
+                    addMainframeLog("STABILIZED: Satellite ID $id stable orbit around Host ID ${s.planetId} at ${String.format(java.util.Locale.US, "%.3f", angle)} rad.")
                     s.copy(isDragged = false, angle = angle)
                 } else {
                     s
@@ -297,16 +362,30 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
 
     fun speakIntoAether(rawText: String) {
         if (rawText.isBlank()) return
-
+ 
         _isAnalyzing.value = true
         _statusText.value = "Aether Core is aligning cognitive vectors..."
         _errorMessage.value = null
-
+ 
+        // Bijective intercept logs pre-execution
+        if (_isLegacyRouteEnabled.value) {
+            addMainframeLog("POST /cgi-bin/aether-core.pl HTTP/1.1 SINK")
+            addMainframeLog("SOAPAction: \"urn:aether-cognitive-space/SyncThoughts\" over PORT 80")
+            addMainframeLog("INTERCEPT Envelope: <soap:Envelop><soap:Body><SyncText>${rawText.take(15)}...</SyncText></soap:Body></soap:Envelop>")
+        } else {
+            addMainframeLog("REST TRANSMIT: GET secure.aether.org/api/v1/cognitive-crystal?direct=true [ENCRYPTED]")
+        }
+ 
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                // Gameplay Element: If CGI Buffer Overflow is tripped, fail the SOAP transmission to create a fun challenge!
+                if (_isLegacyRouteEnabled.value && _cgiBufferOverflow.value) {
+                    throw Exception("XML PARSER FAULT: 500 INTERNAL SERVER ERROR (PERL COBOL BRIDGE BUFFER OVERFLOW - STACK DUMP ERROR). Reset mainframe buffer logs under Mainframe Terminal tab before crystallization.")
+                }
+ 
                 // Call Gemini API to extract and parse tasks response
                 val structuredSatellites = GeminiClient.analyzeStreamOfConsciousness(rawText)
-
+ 
                 withContext(Dispatchers.Main) {
                     if (structuredSatellites.isEmpty()) {
                         _statusText.value = "The Core found nothing to crystallize. Try saying more."
@@ -314,10 +393,10 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
                         _statusText.value = "Crystallized ${structuredSatellites.size} satellites!"
                     }
                 }
-
+ 
                 // Map planets to ID for easy DB saving
                 val planetNameToId = categories.value.associateBy { it.name.lowercase() }
-
+ 
                 structuredSatellites.forEach { sat ->
                     val resolvedId = planetNameToId[sat.planetName.lowercase()]?.id ?: 3 // default to Musa pink
                     val thought = ThoughtEntity(
@@ -326,10 +405,10 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
                         content = sat.content,
                         importance = sat.importance.coerceIn(0.8f, 1.4f)
                     )
-
+ 
                     // Insert locally in Room
                     val newRowId = repository.insertThought(thought)
-
+ 
                     // Animate newly born satellites expanding outward from the sun
                     withContext(Dispatchers.Main) {
                         _satellites.value = _satellites.value + SatelliteState(
@@ -346,10 +425,32 @@ class AetherViewModel(application: Application) : AndroidViewModel(application) 
                         )
                     }
                 }
+ 
+                // After successful legacy SOAP parse, simulate a 25% chance of stack memory overflow
+                if (_isLegacyRouteEnabled.value) {
+                    val triggerBufferOverflow = Random.nextInt(100) < 25
+                    withContext(Dispatchers.Main) {
+                        addMainframeLog("SOAP INTERACTION SUCCESSFUL. PACKETS SYNCHRONIZED COMPLIANT TO Y2K TIME.")
+                        if (triggerBufferOverflow) {
+                            _cgiBufferOverflow.value = true
+                            addMainframeLog("CRITICAL: PLURAL COBOL REGISTER SET IN REG-04 CORRUPTED (BINARY DRIFT DETECTED - COBOL BUFFER EXCEEDED (99.2%)). PLEASE MANUAL PATCH TO RESTORE ROUTE SPEED!")
+                            _statusText.value = "CGI-BIN SOAP proxy is warning: Stack drift buffer warning!"
+                        }
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        addMainframeLog("HTTPS DIRECT PIPELINE REST STREAM SYNCHRONIZED COMPLETED. CACHE AT 0%.")
+                    }
+                }
+ 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     _errorMessage.value = e.message ?: "Cosmic error during crystallization."
-                    _statusText.value = "The Aether was disrupted. Check your connection or API key."
+                    _statusText.value = if (_cgiBufferOverflow.value) {
+                        "CGI Terminal Overflow! Resolve it under Mainframe tab."
+                    } else {
+                        "The Aether was disrupted. Check your connection or API key."
+                    }
                     e.printStackTrace()
                 }
             } finally {
@@ -436,7 +537,7 @@ data class PlanetState(
     val name: String,
     val colorHex: String,
     val relativeSize: Float,
-    val orbitRadius: Float,
+    var orbitRadius: Float,
     val orbitSpeed: Float,
     val description: String,
     var angle: Float,
@@ -454,9 +555,9 @@ data class SatelliteState(
     val content: String,
     val planetId: Int,
     val importance: Float,
-    val status: String,
+    var status: String,
     var angle: Float,
-    val relativeDistance: Float,
+    var relativeDistance: Float,
     val orbitSpeed: Float,
     var x: Float = 0f,
     var y: Float = 0f,
