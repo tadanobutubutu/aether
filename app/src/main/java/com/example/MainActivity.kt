@@ -163,12 +163,8 @@ fun AetherAppScreen(
                             .background(CosmicSurface)
                             .border(1.dp, CosmicBorder, RoundedCornerShape(12.dp))
                             .testTag("add_manual_button")
-                            .semantics(mergeDescendants = true) {
+                            .semantics {
                                 contentDescription = "マニュアルを表示"
-                                onClick(label = "マニュアルを表示") {
-                                    showManualDialog = true
-                                    true
-                                }
                             }
                     ) {
                         Icon(
@@ -187,12 +183,8 @@ fun AetherAppScreen(
                             .background(CosmicSurface)
                             .border(1.dp, CosmicBorder, RoundedCornerShape(12.dp))
                             .testTag("info_guide_button")
-                            .semantics(mergeDescendants = true) {
+                            .semantics {
                                 contentDescription = "ガイドの表示切り替え"
-                                onClick(label = "ガイドの表示切り替え") {
-                                    showGuide = !showGuide
-                                    true
-                                }
                             }
                     ) {
                         Icon(
@@ -316,6 +308,7 @@ fun AetherAppScreen(
                                 .size(12.dp)
                                 .semantics {
                                     stateDescription = "読み込み中"
+                                    contentDescription = "読み込み中"
                                     liveRegion = LiveRegionMode.Polite
                                 },
                             strokeWidth = 1.5.dp
@@ -473,12 +466,8 @@ fun AetherAppScreen(
                             
                             IconButton(
                                 onClick = { viewModel.selectThought(null) },
-                                modifier = Modifier.semantics(mergeDescendants = true) {
+                                modifier = Modifier.semantics {
                                     contentDescription = "思考の選択を解除"
-                                    onClick(label = "思考の選択を解除") {
-                                        viewModel.selectThought(null)
-                                        true
-                                    }
                                 }
                             ) {
                                 Icon(Icons.Default.Close, contentDescription = "Close mark icon", tint = TextMuted)
@@ -516,12 +505,8 @@ fun AetherAppScreen(
                             // Secondary dissolve
                             TextButton(
                                 onClick = { viewModel.deleteSelectedThought() },
-                                modifier = Modifier.semantics(mergeDescendants = true) {
+                                modifier = Modifier.semantics {
                                     contentDescription = "思考を削除"
-                                    onClick(label = "思考を削除") {
-                                        viewModel.deleteSelectedThought()
-                                        true
-                                    }
                                 },
                                 colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFEF4444))
                             ) {
@@ -537,12 +522,8 @@ fun AetherAppScreen(
                                 Button(
                                     onClick = { viewModel.completeThought(thought) },
                                     colors = ButtonDefaults.buttonColors(containerColor = CosmicSecondary),
-                                    modifier = Modifier.semantics(mergeDescendants = true) {
+                                    modifier = Modifier.semantics {
                                         contentDescription = "思考を完了としてマーク"
-                                        onClick(label = "思考を完了としてマーク") {
-                                            viewModel.completeThought(thought)
-                                            true
-                                        }
                                     }
                                 ) {
                                     Icon(Icons.Default.Check, contentDescription = "Check mark indicator icon", tint = CosmicBackground, modifier = Modifier.size(16.dp))
@@ -553,12 +534,8 @@ fun AetherAppScreen(
                                 Button(
                                     onClick = { viewModel.reopenThought(thought) },
                                     colors = ButtonDefaults.buttonColors(containerColor = CosmicPrimary),
-                                    modifier = Modifier.semantics(mergeDescendants = true) {
+                                    modifier = Modifier.semantics {
                                         contentDescription = "思考を再開"
-                                        onClick(label = "思考を再開") {
-                                            viewModel.reopenThought(thought)
-                                            true
-                                        }
                                     }
                                 ) {
                                     Icon(Icons.Default.Refresh, contentDescription = "Circular refresh feedback arrow icon", tint = TextBright, modifier = Modifier.size(16.dp))
@@ -641,13 +618,8 @@ fun AetherAppScreen(
                         modifier = Modifier
                             .height(52.dp)
                             .testTag("crystallize_button")
-                            .semantics(mergeDescendants = true) {
+                            .semantics {
                                 contentDescription = "Aetherに送信"
-                                onClick(label = "Aetherに送信") {
-                                    viewModel.speakIntoAether(rawInputText)
-                                    rawInputText = ""
-                                    true
-                                }
                             }
                     ) {
                         if (isAnalyzing) {
@@ -657,6 +629,7 @@ fun AetherAppScreen(
                                     .size(16.dp)
                                     .semantics {
                                         stateDescription = "送信中"
+                                        contentDescription = "送信中"
                                         liveRegion = LiveRegionMode.Polite
                                     },
                                 strokeWidth = 2.dp
@@ -765,9 +738,8 @@ fun AetherAppScreen(
                         ) {
                             TextButton(
                                 onClick = { showManualDialog = false },
-                                modifier = Modifier.semantics(mergeDescendants = true) {
+                                modifier = Modifier.semantics {
                                     contentDescription = "Cancel the manual satellite launcher dialog"
-                                    onClick(label = "Close dialog") { true }
                                 }
                             ) {
                                 Text("Cancel", color = TextMuted)
@@ -782,15 +754,8 @@ fun AetherAppScreen(
                                 },
                                 enabled = mTitle.isNotBlank(),
                                 colors = ButtonDefaults.buttonColors(containerColor = CosmicPrimary),
-                                modifier = Modifier.semantics(mergeDescendants = true) {
+                                modifier = Modifier.semantics {
                                     contentDescription = "メモを保存"
-                                    onClick(label = "メモを保存") {
-                                        if (mTitle.isNotBlank()) {
-                                            viewModel.createThoughtManually(mTitle, mContent, mPlanetId)
-                                            showManualDialog = false
-                                        }
-                                        true
-                                    }
                                 }
                             ) {
                                 Text("Launch Orbit", color = TextBright)

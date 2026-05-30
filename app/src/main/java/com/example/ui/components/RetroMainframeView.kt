@@ -298,13 +298,8 @@ fun RetroMainframeView(
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFAA1111)),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .semantics(mergeDescendants = true) {
+                                    .semantics {
                                         contentDescription = "サウンドを再生"
-                                        onClick(label = "サウンドを再生") {
-                                            RetroBeeper.playReset()
-                                            viewModel.clearCgiOverflow()
-                                            true
-                                        }
                                     }
                             ) {
                                 Text("PATCH DRIFT & FLUSH CGI BUFFER", color = Color.White, fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
@@ -490,17 +485,8 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics(mergeDescendants = true) {
+                                            .semantics {
                                                 contentDescription = "軌道を15度反時計回りに回転"
-                                                onClick(label = "軌道を15度反時計回りに回転") {
-                                                    RetroBeeper.playPunch()
-                                                    if (selectedTargetIsPlanet) {
-                                                        viewModel.updatePlanetOrbitFromMainframe(selectedTargetId.toInt(), 0f, -0.26f)
-                                                    } else {
-                                                        viewModel.updateSatelliteOrbitFromMainframe(selectedTargetId, -0.26f, 0f)
-                                                    }
-                                                    true
-                                                }
                                             }
                                     ) {
                                         Text("ROT -15°", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
@@ -519,17 +505,8 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics(mergeDescendants = true) {
+                                            .semantics {
                                                 contentDescription = "軌道を15度時計回りに回転"
-                                                onClick(label = "軌道を15度時計回りに回転") {
-                                                    RetroBeeper.playPunch()
-                                                    if (selectedTargetIsPlanet) {
-                                                        viewModel.updatePlanetOrbitFromMainframe(selectedTargetId.toInt(), 0f, 0.26f)
-                                                    } else {
-                                                        viewModel.updateSatelliteOrbitFromMainframe(selectedTargetId, 0.26f, 0f)
-                                                    }
-                                                    true
-                                                }
                                             }
                                     ) {
                                         Text("ROT +15°", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
@@ -555,17 +532,8 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics(mergeDescendants = true) {
+                                            .semantics {
                                                 contentDescription = "軌道半径を15dp縮小"
-                                                onClick(label = "軌道半径を15dp縮小") {
-                                                    RetroBeeper.playPunch()
-                                                    if (selectedTargetIsPlanet) {
-                                                        viewModel.updatePlanetOrbitFromMainframe(selectedTargetId.toInt(), -15f, 0f)
-                                                    } else {
-                                                        viewModel.updateSatelliteOrbitFromMainframe(selectedTargetId, 0f, -12f)
-                                                    }
-                                                    true
-                                                }
                                             }
                                     ) {
                                         Text("PAN -15dp", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
@@ -584,17 +552,8 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics(mergeDescendants = true) {
+                                            .semantics {
                                                 contentDescription = "軌道半径を15dp拡大"
-                                                onClick(label = "軌道半径を15dp拡大") {
-                                                    RetroBeeper.playPunch()
-                                                    if (selectedTargetIsPlanet) {
-                                                        viewModel.updatePlanetOrbitFromMainframe(selectedTargetId.toInt(), 15f, 0f)
-                                                    } else {
-                                                        viewModel.updateSatelliteOrbitFromMainframe(selectedTargetId, 0f, 12f)
-                                                    }
-                                                    true
-                                                }
                                             }
                                     ) {
                                         Text("PAN +15dp", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
