@@ -163,7 +163,7 @@ fun AetherAppScreen(
                             .background(CosmicSurface)
                             .border(1.dp, CosmicBorder, RoundedCornerShape(12.dp))
                             .testTag("add_manual_button")
-                            .semantics {
+                            .semantics(mergeDescendants = true) {
                                 contentDescription = "Manually launch a new satellite"
                                 onClick(label = "Open manual launch dialog") { true }
                             }
@@ -184,7 +184,7 @@ fun AetherAppScreen(
                             .background(CosmicSurface)
                             .border(1.dp, CosmicBorder, RoundedCornerShape(12.dp))
                             .testTag("info_guide_button")
-                            .semantics {
+                            .semantics(mergeDescendants = true) {
                                 contentDescription = "Toggle instructions guide drop-down panel"
                                 onClick(label = "Toggle guide visibility") { true }
                             }
@@ -309,7 +309,7 @@ fun AetherAppScreen(
                             modifier = Modifier
                                 .size(12.dp)
                                 .semantics {
-                                    stateDescription = "Analyzing stream of consciousness"
+                                    stateDescription = "読み込み中"
                                     liveRegion = LiveRegionMode.Polite
                                 },
                             strokeWidth = 1.5.dp
@@ -467,7 +467,7 @@ fun AetherAppScreen(
                             
                             IconButton(
                                 onClick = { viewModel.selectThought(null) },
-                                modifier = Modifier.semantics {
+                                modifier = Modifier.semantics(mergeDescendants = true) {
                                     contentDescription = "Dismiss selected satellite details window"
                                     onClick(label = "Close drawer panel") { true }
                                 }
@@ -508,7 +508,7 @@ fun AetherAppScreen(
                             TextButton(
                                 onClick = { viewModel.deleteSelectedThought() },
                                 colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFEF4444)),
-                                modifier = Modifier.semantics {
+                                modifier = Modifier.semantics(mergeDescendants = true) {
                                     contentDescription = "Dissolve and delete currently selected thought"
                                     onClick(label = "Erase satellite from existence") { true }
                                 }
@@ -525,7 +525,7 @@ fun AetherAppScreen(
                                 Button(
                                     onClick = { viewModel.completeThought(thought) },
                                     colors = ButtonDefaults.buttonColors(containerColor = CosmicSecondary),
-                                    modifier = Modifier.semantics {
+                                    modifier = Modifier.semantics(mergeDescendants = true) {
                                         contentDescription = "Mark thought as structured and crystallized"
                                         onClick(label = "Stabilize and freeze orbit") { true }
                                     }
@@ -538,7 +538,7 @@ fun AetherAppScreen(
                                 Button(
                                     onClick = { viewModel.reopenThought(thought) },
                                     colors = ButtonDefaults.buttonColors(containerColor = CosmicPrimary),
-                                    modifier = Modifier.semantics {
+                                    modifier = Modifier.semantics(mergeDescendants = true) {
                                         contentDescription = "Un-crystallize and release back into orbit"
                                         onClick(label = "Re-activate orbit stream") { true }
                                     }
@@ -579,6 +579,7 @@ fun AetherAppScreen(
                     TextField(
                         value = rawInputText,
                         onValueChange = { rawInputText = it },
+                        label = { Text("メモを入力", color = TextMuted) },
                         placeholder = {
                             Text(
                                 "Speak into the Aether...",
@@ -599,7 +600,7 @@ fun AetherAppScreen(
                             .weight(1f)
                             .testTag("aether_speech_input")
                             .semantics {
-                                contentDescription = "Speech draft text area for stream of consciousness input"
+                                contentDescription = "メモを入力"
                             },
                         singleLine = false,
                         maxLines = 4
@@ -622,7 +623,7 @@ fun AetherAppScreen(
                         modifier = Modifier
                             .height(52.dp)
                             .testTag("crystallize_button")
-                            .semantics {
+                            .semantics(mergeDescendants = true) {
                                 contentDescription = "Crystallize the current text input stream via Gemini"
                                 onClick(label = "Execute AI constellation synthesis") { true }
                             }
@@ -633,7 +634,7 @@ fun AetherAppScreen(
                                 modifier = Modifier
                                     .size(16.dp)
                                     .semantics {
-                                        stateDescription = "Synthesizing and aligning cosmic matter with Gemini AI"
+                                        stateDescription = "読み込み中"
                                         liveRegion = LiveRegionMode.Polite
                                     },
                                 strokeWidth = 2.dp
@@ -724,7 +725,9 @@ fun AetherAppScreen(
                                             color = if (mPlanetId == p.id) planetColor else CosmicBorder,
                                             shape = RoundedCornerShape(8.dp)
                                         )
-                                        .clickable { mPlanetId = p.id }
+                                        .clickable(
+                                            onClickLabel = "Select ${p.name} category"
+                                        ) { mPlanetId = p.id }
                                         .padding(horizontal = 10.dp, vertical = 6.dp)
                                 ) {
                                     Text(p.name, color = if (mPlanetId == p.id) TextBright else TextMuted, fontSize = 11.sp, fontWeight = FontWeight.Bold)
@@ -738,7 +741,13 @@ fun AetherAppScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End
                         ) {
-                            TextButton(onClick = { showManualDialog = false }) {
+                            TextButton(
+                                onClick = { showManualDialog = false },
+                                modifier = Modifier.semantics(mergeDescendants = true) {
+                                    contentDescription = "Cancel the manual satellite launcher dialog"
+                                    onClick(label = "Close dialog") { true }
+                                }
+                            ) {
                                 Text("Cancel", color = TextMuted)
                             }
                             Spacer(modifier = Modifier.width(16.dp))
@@ -751,7 +760,7 @@ fun AetherAppScreen(
                                 },
                                 enabled = mTitle.isNotBlank(),
                                 colors = ButtonDefaults.buttonColors(containerColor = CosmicPrimary),
-                                modifier = Modifier.semantics {
+                                modifier = Modifier.semantics(mergeDescendants = true) {
                                     contentDescription = "Confirm launching custom satellite manually into target category gravity field"
                                     onClick(label = "Commit satellite launch") { true }
                                 }

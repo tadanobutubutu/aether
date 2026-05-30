@@ -298,7 +298,7 @@ fun RetroMainframeView(
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFAA1111)),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .semantics {
+                                    .semantics(mergeDescendants = true) {
                                         contentDescription = "Patch memory registers and flush the active Perl CGI stack overflow buffer"
                                         onClick(label = "Trigger emergency memory purge") { true }
                                     }
@@ -486,7 +486,7 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics {
+                                            .semantics(mergeDescendants = true) {
                                                 contentDescription = "Rotate currently selected celestial node counter-clockwise by 15 degrees"
                                                 onClick(label = "Rotate orbital target counter-clockwise") { true }
                                             }
@@ -507,7 +507,7 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics {
+                                            .semantics(mergeDescendants = true) {
                                                 contentDescription = "Rotate currently selected celestial node clockwise by 15 degrees"
                                                 onClick(label = "Rotate orbital target clockwise") { true }
                                             }
@@ -535,7 +535,7 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics {
+                                            .semantics(mergeDescendants = true) {
                                                 contentDescription = "Shrink orbit radius of currently selected celestial node by 15 density-points"
                                                 onClick(label = "Pull target orbit closer") { true }
                                             }
@@ -556,7 +556,7 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics {
+                                            .semantics(mergeDescendants = true) {
                                                 contentDescription = "Expand orbit radius of currently selected celestial node by 15 density-points"
                                                 onClick(label = "Push target orbit further") { true }
                                             }
