@@ -298,9 +298,9 @@ fun RetroMainframeView(
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFAA1111)),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .semantics(mergeDescendants = true) {
-                                        contentDescription = "Patch memory registers and flush the active Perl CGI stack overflow buffer"
-                                        onClick(label = "Trigger emergency memory purge") { true }
+                                    .semantics {
+                                        contentDescription = "サウンドを再生"
+                                        onClick(label = "サウンドを再生", action = null)
                                     }
                             ) {
                                 Text("PATCH DRIFT & FLUSH CGI BUFFER", color = Color.White, fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
@@ -486,9 +486,9 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics(mergeDescendants = true) {
-                                                contentDescription = "Rotate currently selected celestial node counter-clockwise by 15 degrees"
-                                                onClick(label = "Rotate orbital target counter-clockwise") { true }
+                                            .semantics {
+                                                contentDescription = "軌道を15度反時計回りに回転"
+                                                onClick(label = "軌道を15度反時計回りに回転", action = null)
                                             }
                                     ) {
                                         Text("ROT -15°", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
@@ -507,9 +507,9 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics(mergeDescendants = true) {
-                                                contentDescription = "Rotate currently selected celestial node clockwise by 15 degrees"
-                                                onClick(label = "Rotate orbital target clockwise") { true }
+                                            .semantics {
+                                                contentDescription = "軌道を15度時計回りに回転"
+                                                onClick(label = "軌道を15度時計回りに回転", action = null)
                                             }
                                     ) {
                                         Text("ROT +15°", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
@@ -535,9 +535,9 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics(mergeDescendants = true) {
-                                                contentDescription = "Shrink orbit radius of currently selected celestial node by 15 density-points"
-                                                onClick(label = "Pull target orbit closer") { true }
+                                            .semantics {
+                                                contentDescription = "軌道半径を15dp縮小"
+                                                onClick(label = "軌道半径を15dp縮小", action = null)
                                             }
                                     ) {
                                         Text("PAN -15dp", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
@@ -556,9 +556,9 @@ fun RetroMainframeView(
                                         contentPadding = PaddingValues(horizontal = 8.dp),
                                         modifier = Modifier
                                             .weight(1f)
-                                            .semantics(mergeDescendants = true) {
-                                                contentDescription = "Expand orbit radius of currently selected celestial node by 15 density-points"
-                                                onClick(label = "Push target orbit further") { true }
+                                            .semantics {
+                                                contentDescription = "軌道半径を15dp拡大"
+                                                onClick(label = "軌道半径を15dp拡大", action = null)
                                             }
                                     ) {
                                         Text("PAN +15dp", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
