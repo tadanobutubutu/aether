@@ -1,35 +1,52 @@
 # 🗺️ Aether Project Roadmap
 
-This document outlines the evolutionary steps of **Aether — Turn Thoughts into Worlds**. We are committed to shifting classical static notepad systems into dynamic, physical, and self-organizing environments.
+This document outlines the development milestoning, priorities, estimated targets, and long-term multiplatform support plans for **Aether**.
 
 ---
 
-## 🚀 Phase 1: Interactive Foundation (Current Release)
-- [x] **Bijective Unified State Engine:** Simultaneous Jetpack Compose and local state flows with zero structural desynchronization.
-- [x] **Autonomous AI Crystallization:** Instant "Stream of Consciousness" interpretation using the server-side Gemini API.
-- [x] **Multi-Dimensional Dichotomy:** 
-  - **Jetpack Compose 2D Physics Canvas:** Fast editing, dragging, merging, and biological sorting.
-  - **Three.js WebGL Orbit View:** Immersive spatial cruise camera for high-dimensional structural reflection.
-- [x] **Retro Computations Emulation Layer:** Highly detailed COBOL layout, simulated Perl-CGI Soap 1.1 bindings, and mechanical sound generators.
+## 🏛️ Milestone 1: Interactive Foundation (Live MVP Releases)
+* **Goal:** Establish zero-latency biome systems mapping streams of consciousness straight to physical orbit fields.
+* **Target Window:** Completed
+
+- [x] **Relational Core Data Layers:** SQLite backing through Jetpack Compose state streams. (Priority: Critical)
+- [x] **AI Cognitive Parser:** Rest API integration utilizing Gemini 3.5 Flash for natural speech processing. (Priority: High)
+- [x] **Tactile 2D Momentum Sim:** Custom multi-touch orbital drag vectors and hooks. (Priority: High)
+- [x] **Classic Back-system Emulation:** Functioning virtual COBOL registries, Perl-CGI Soap 1.1 simulation wrappers, and CDMA physical beep audio. (Priority: Medium)
+- [x] **WebGL Render Module:** Sandbox WebGL visualizer running custom Rust and Zig WebAssembly coprocessors on the WebView Javascript thread. (Priority: Medium)
 
 ---
 
-## 🪐 Phase 2: Biological & Gravity Core Expansion (Under Development)
-- [ ] **Cross-Node Gravitational Pulls:**
-  - Let massive satellite nodes pull other nearby satellites towards them, representing associative semantic links.
-  - Establish dynamic visual gravity-lines that flex and bend as satellites drift together.
-- [ ] **Entropy & Tidal Decay (Space Dust):**
-  - Synthesize a natural "half-life" context where unused/inactive thoughts degrade, losing orbit speed and breaking from orbit.
-  - Disintegrated thoughts dissolve into "space dust" and pool into a surrounding gravitational trash ring, ready to be incinerated or re-ignited.
-- [ ] **Dynamic Mass Calibration:**
-  - Scale a planet or satellite's physically active hitbox size and drag-resistance dynamically based on its calculated core database size.
+## 🦖 Milestone 2: Kinetic Gravity & Planetary Expansion
+* **Goal:** Enhance physical orbit behaviors, introducing gravity strings, active mass modifiers, and decay.
+* **Target Window:** Q3 2026 (Priority: High)
+
+- [ ] **Dynamic Gravity Connections:**
+  - Let adjacent nodes pull on each other to form semantic clustering structures, represented by elastic neon filaments.
+- [ ] **Tidal Decay & Entropy Rings:**
+  - Inactive satellites experiencing simulated orbit decay lose speed, drift out of orbit, and pool into a surrounding gravitational trash ring before dissolving.
+- [ ] **Volume Calibration Modifiers:**
+  - Automatically scale planetary drag and hitbox size based on the depth of text notes stored inside databases.
+- [ ] **Dual-Channel Live Synchronization:**
+  - Connect full SQLite data updates to the WebGL WebView, enabling direct rendering of your active database thoughts inside the 3D quantum space mesh.
 
 ---
 
-## 🌌 Phase 3: Connected Multiverses (Personal Knowledge Systems)
-- [ ] **Markdown Obsidian-Format Sink:**
-  - Import existing `.md` files to automatically generate a glowing 3D orbital cluster constellation.
-- [ ] **Astronomical Multiverses (Workspace Swapper):**
-  - Switch between independent systems (e.g., "Academic Universe", "Creative Writing Universe", "Dev Ops Space Orbit").
-- [ ] **Full-Text Associative Gravity Sync:**
-  - Typing a new thought will instantly create an active vector magnet, pulling relevant matching database nodes closer coordinates-wise across orbits.
+## 🌐 Platform Expansion & Multiplatform Roadmap
+
+To make personal knowledge portable, we have defined a multiplatform rollout path:
+
+```
+┌───────────────────────────┬───────────────┬───────────────────────────┐
+│ Platform Target           │ Priority      │ Estimated Release Window  │
+├───────────────────────────┼───────────────┼───────────────────────────┤
+│ Android Compact & Tablet  │   Critical    │ Live (Active Support)     │
+│ Web Application (Alpha)   │     High      │ Q4 2026                   │
+│ macOS & Windows Desktop   │    Medium     │ Q2 2027                   │
+│ iOS Native Client         │    Medium     │ Q4 2027                   │
+└───────────────────────────┴───────────────┴───────────────────────────┘
+```
+
+### Strategic Technical Approaches
+* **Kotlin Multiplatform (KMP):** Future builds will abstract the core Room tables and ViewModel logic to multiplatform targets, targeting native iOS and Android backends smoothly.
+* **Compose Multiplatform:** Shared UI systems will run on macOS and Windows Desktop viewports.
+* **Three.js Core Portability:** Our WebGL html5 views are ready to be packaged contextually inside desktop wrappers (such as Tauri or Electron) or served as a standard server-side progressive web application (PWA).
