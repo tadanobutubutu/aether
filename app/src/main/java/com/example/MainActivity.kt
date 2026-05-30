@@ -22,6 +22,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -162,10 +163,14 @@ fun AetherAppScreen(
                             .background(CosmicSurface)
                             .border(1.dp, CosmicBorder, RoundedCornerShape(12.dp))
                             .testTag("add_manual_button")
+                            .semantics {
+                                contentDescription = "Manually launch a new satellite"
+                                onClick(label = "Open manual launch dialog") { true }
+                            }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add manually",
+                            contentDescription = "Plus icon symbol",
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)
                         )
@@ -179,10 +184,14 @@ fun AetherAppScreen(
                             .background(CosmicSurface)
                             .border(1.dp, CosmicBorder, RoundedCornerShape(12.dp))
                             .testTag("info_guide_button")
+                            .semantics {
+                                contentDescription = "Toggle instructions guide drop-down panel"
+                                onClick(label = "Toggle guide visibility") { true }
+                            }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Info,
-                            contentDescription = "Toggle Guide",
+                            contentDescription = "Information icon symbol",
                             tint = if (showGuide) CosmicSecondary else TextMuted,
                             modifier = Modifier.size(24.dp)
                         )
@@ -297,7 +306,12 @@ fun AetherAppScreen(
                     if (isAnalyzing) {
                         CircularProgressIndicator(
                             color = CosmicSecondary,
-                            modifier = Modifier.size(12.dp),
+                            modifier = Modifier
+                                .size(12.dp)
+                                .semantics {
+                                    stateDescription = "Analyzing stream of consciousness"
+                                    liveRegion = LiveRegionMode.Polite
+                                },
                             strokeWidth = 1.5.dp
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -337,7 +351,7 @@ fun AetherAppScreen(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     imageVector = Icons.Filled.CompassCalibration,
-                                    contentDescription = null,
+                                    contentDescription = "Compass calibration decorative icon representation",
                                     tint = CosmicSecondary,
                                     modifier = Modifier.size(14.dp)
                                 )
@@ -451,8 +465,14 @@ fun AetherAppScreen(
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             
-                            IconButton(onClick = { viewModel.selectThought(null) }) {
-                                Icon(Icons.Default.Close, contentDescription = "Close detailed view", tint = TextMuted)
+                            IconButton(
+                                onClick = { viewModel.selectThought(null) },
+                                modifier = Modifier.semantics {
+                                    contentDescription = "Dismiss selected satellite details window"
+                                    onClick(label = "Close drawer panel") { true }
+                                }
+                            ) {
+                                Icon(Icons.Default.Close, contentDescription = "Close mark icon", tint = TextMuted)
                             }
                         }
 
@@ -487,9 +507,13 @@ fun AetherAppScreen(
                             // Secondary dissolve
                             TextButton(
                                 onClick = { viewModel.deleteSelectedThought() },
-                                colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFEF4444))
+                                colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFFEF4444)),
+                                modifier = Modifier.semantics {
+                                    contentDescription = "Dissolve and delete currently selected thought"
+                                    onClick(label = "Erase satellite from existence") { true }
+                                }
                             ) {
-                                Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Icon(Icons.Default.Delete, contentDescription = "Trash icon symbol", modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text("Dissolve")
                             }
@@ -500,18 +524,26 @@ fun AetherAppScreen(
                             if (thought.status != "Completed") {
                                 Button(
                                     onClick = { viewModel.completeThought(thought) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = CosmicSecondary)
+                                    colors = ButtonDefaults.buttonColors(containerColor = CosmicSecondary),
+                                    modifier = Modifier.semantics {
+                                        contentDescription = "Mark thought as structured and crystallized"
+                                        onClick(label = "Stabilize and freeze orbit") { true }
+                                    }
                                 ) {
-                                    Icon(Icons.Default.Check, contentDescription = null, tint = CosmicBackground, modifier = Modifier.size(16.dp))
+                                    Icon(Icons.Default.Check, contentDescription = "Check mark indicator icon", tint = CosmicBackground, modifier = Modifier.size(16.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Text("Crystallized", color = CosmicBackground, fontWeight = FontWeight.Bold)
                                 }
                             } else {
                                 Button(
                                     onClick = { viewModel.reopenThought(thought) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = CosmicPrimary)
+                                    colors = ButtonDefaults.buttonColors(containerColor = CosmicPrimary),
+                                    modifier = Modifier.semantics {
+                                        contentDescription = "Un-crystallize and release back into orbit"
+                                        onClick(label = "Re-activate orbit stream") { true }
+                                    }
                                 ) {
-                                    Icon(Icons.Default.Refresh, contentDescription = null, tint = TextBright, modifier = Modifier.size(16.dp))
+                                    Icon(Icons.Default.Refresh, contentDescription = "Circular refresh feedback arrow icon", tint = TextBright, modifier = Modifier.size(16.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Text("Re-Orbit", color = TextBright, fontWeight = FontWeight.Bold)
                                 }
@@ -565,7 +597,10 @@ fun AetherAppScreen(
                         ),
                         modifier = Modifier
                             .weight(1f)
-                            .testTag("aether_speech_input"),
+                            .testTag("aether_speech_input")
+                            .semantics {
+                                contentDescription = "Speech draft text area for stream of consciousness input"
+                            },
                         singleLine = false,
                         maxLines = 4
                     )
@@ -587,12 +622,25 @@ fun AetherAppScreen(
                         modifier = Modifier
                             .height(52.dp)
                             .testTag("crystallize_button")
+                            .semantics {
+                                contentDescription = "Crystallize the current text input stream via Gemini"
+                                onClick(label = "Execute AI constellation synthesis") { true }
+                            }
                     ) {
                         if (isAnalyzing) {
-                            CircularProgressIndicator(color = TextBright, modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
+                            CircularProgressIndicator(
+                                color = TextBright,
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .semantics {
+                                        stateDescription = "Synthesizing and aligning cosmic matter with Gemini AI"
+                                        liveRegion = LiveRegionMode.Polite
+                                    },
+                                strokeWidth = 2.dp
+                            )
                         } else {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(Icons.Filled.AutoAwesome, contentDescription = "Crystallize")
+                                Icon(Icons.Filled.AutoAwesome, contentDescription = "Magic sparkles star icon", tint = TextBright)
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text("Crystallize", fontWeight = FontWeight.Bold, color = TextBright)
                             }
@@ -702,7 +750,11 @@ fun AetherAppScreen(
                                     }
                                 },
                                 enabled = mTitle.isNotBlank(),
-                                colors = ButtonDefaults.buttonColors(containerColor = CosmicPrimary)
+                                colors = ButtonDefaults.buttonColors(containerColor = CosmicPrimary),
+                                modifier = Modifier.semantics {
+                                    contentDescription = "Confirm launching custom satellite manually into target category gravity field"
+                                    onClick(label = "Commit satellite launch") { true }
+                                }
                             ) {
                                 Text("Launch Orbit", color = TextBright)
                             }

@@ -44,7 +44,7 @@ class GreetingScreenshotTest {
           Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
               imageVector = Icons.Filled.AutoAwesome,
-              contentDescription = null,
+              contentDescription = "Aether star constellation decorative insignia",
               tint = GoldAcc,
               modifier = Modifier.size(48.dp)
             )

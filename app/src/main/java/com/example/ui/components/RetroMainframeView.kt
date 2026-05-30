@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -211,12 +212,16 @@ fun RetroMainframeView(
                                 RetroBeeper.playPunch()
                                 viewModel.setLegacyRouteEnabled(true)
                             }
+                            .semantics {
+                                contentDescription = "Active simulated SOAP SOAP 1.1 legacy pipe link via port 80"
+                                onClick(label = "Engage simulated Perl COBOL Port 80 SOAP tunnel") { true }
+                            }
                             .padding(12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
                             imageVector = Icons.Default.Terminal,
-                            contentDescription = null,
+                            contentDescription = "Simulated binary computer terminal console logo",
                             tint = if (isLegacyRoute) Color(0xFF33FF33) else Color.Gray,
                             modifier = Modifier.size(24.dp)
                         )
@@ -235,12 +240,16 @@ fun RetroMainframeView(
                                 RetroBeeper.playPunch()
                                 viewModel.setLegacyRouteEnabled(false)
                             }
+                            .semantics {
+                                contentDescription = "Direct JSON REST pipeline interface"
+                                onClick(label = "Engage modern cloud SSL secure direct pipeline") { true }
+                            }
                             .padding(12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
                             imageVector = Icons.Default.CloudQueue,
-                            contentDescription = null,
+                            contentDescription = "Cloud connectivity outline representation",
                             tint = if (!isLegacyRoute) Color(0xFF33FF33) else Color.Gray,
                             modifier = Modifier.size(24.dp)
                         )
@@ -287,7 +296,12 @@ fun RetroMainframeView(
                                     viewModel.clearCgiOverflow()
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFAA1111)),
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .semantics {
+                                        contentDescription = "Patch memory registers and flush the active Perl CGI stack overflow buffer"
+                                        onClick(label = "Trigger emergency memory purge") { true }
+                                    }
                             ) {
                                 Text("PATCH DRIFT & FLUSH CGI BUFFER", color = Color.White, fontSize = 11.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
                             }
@@ -470,7 +484,12 @@ fun RetroMainframeView(
                                         },
                                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B3D1B)),
                                         contentPadding = PaddingValues(horizontal = 8.dp),
-                                        modifier = Modifier.weight(1f)
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .semantics {
+                                                contentDescription = "Rotate currently selected celestial node counter-clockwise by 15 degrees"
+                                                onClick(label = "Rotate orbital target counter-clockwise") { true }
+                                            }
                                     ) {
                                         Text("ROT -15°", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                                     }
@@ -486,7 +505,12 @@ fun RetroMainframeView(
                                         },
                                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B3D1B)),
                                         contentPadding = PaddingValues(horizontal = 8.dp),
-                                        modifier = Modifier.weight(1f)
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .semantics {
+                                                contentDescription = "Rotate currently selected celestial node clockwise by 15 degrees"
+                                                onClick(label = "Rotate orbital target clockwise") { true }
+                                            }
                                     ) {
                                         Text("ROT +15°", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                                     }
@@ -509,7 +533,12 @@ fun RetroMainframeView(
                                         },
                                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B3D1B)),
                                         contentPadding = PaddingValues(horizontal = 8.dp),
-                                        modifier = Modifier.weight(1f)
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .semantics {
+                                                contentDescription = "Shrink orbit radius of currently selected celestial node by 15 density-points"
+                                                onClick(label = "Pull target orbit closer") { true }
+                                            }
                                     ) {
                                         Text("PAN -15dp", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                                     }
@@ -525,7 +554,12 @@ fun RetroMainframeView(
                                         },
                                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B3D1B)),
                                         contentPadding = PaddingValues(horizontal = 8.dp),
-                                        modifier = Modifier.weight(1f)
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .semantics {
+                                                contentDescription = "Expand orbit radius of currently selected celestial node by 15 density-points"
+                                                onClick(label = "Push target orbit further") { true }
+                                            }
                                     ) {
                                         Text("PAN +15dp", color = Color(0xFF33FF33), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                                     }
